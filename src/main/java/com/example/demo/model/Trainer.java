@@ -8,12 +8,12 @@ import javax.persistence.*;
 public class Trainer {
     private Integer id;
     private String name;
-    private int account_id;
+    private Integer accountId;
 
-    public Trainer(Integer id, String name, int account_id) {
+    public Trainer(Integer id, String name, Integer accountId) {
         this.id = id;
         this.name = name;
-        this.account_id = account_id;
+        this.accountId = accountId;
     }
 
     public Trainer() {
@@ -22,6 +22,7 @@ public class Trainer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public Integer getId() {
         return id;
     }
@@ -38,11 +39,12 @@ public class Trainer {
         this.name = name;
     }
 
-    public int getAccount_id() {
-        return account_id;
+    public Integer getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(int account_id) {
-        this.account_id = account_id;
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 }
+

@@ -1,23 +1,56 @@
 package com.example.demo.controller;
 
-
+import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.model.Trainer;
 import com.example.demo.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "trainer", method = RequestMethod.GET)
+@RequestMapping(value = "trainer")
 public class TrainerController {
     @Autowired
     TrainerRepository trainerRepository;
-    @GetMapping("/all")
+
+    @GetMapping(value = "/all")
     public List<Trainer> getAllTrainer() {
         return trainerRepository.findAll();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public Trainer updateTrainer(@PathVariable(value = "id") Integer id,
+                                               @Validated @RequestBody Trainer trainerDetails){
+    Trainer trainer = trainerRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Trainer", "id", id));
+        trainer.setName(trainerDetails.getName());
+        trainer.setAccountId(trainerDetails.getAccountId());
+        return trainerRepository.save(trainer);
+    }
+
+    @GetMapping
+    public List<Trainer> getHasNoAccount(@RequestParam(value = "no_account", defaultValue = "true") Boolean accountId){
+        if (accountId){
+           return trainerRepository.findListNoAccount();
+        }else{
+            return new ArrayList<>();
+        }
+    }
+
+
+
+//    @GetMapping(value = "b")
+//    public String getFoos(@RequestParam(defaultValue = "test", required = false) String id) {
+//        return "ID: " + id;
+//    }
+
+    @GetMapping(value = "/{id}")
+    public Optional<Trainer> getTrainerById(@PathVariable Integer id){
+        return trainerRepository.findById(id);
     }
 }
